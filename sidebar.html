@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MCQ AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="sidebar.css" />
+</head>
+
+<body>
+
+  <!-- ─── Main App Shell ─────────────────────────────────────────────── -->
+  <div id="app" class="app">
+
+    <!-- Header -->
+    <header class="header">
+      <div class="header-brand">
+        <div class="logo-mark">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path
+              d="M12 2a8 8 0 0 0-8 8c0 3.4 2.1 6.3 5 7.4V20a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-2.6c2.9-1.1 5-4 5-7.4a8 8 0 0 0-8-8z" />
+            <line x1="10" y1="22" x2="14" y2="22" />
+            <line x1="9" y1="14" x2="9" y2="14.01" />
+            <line x1="15" y1="14" x2="15" y2="14.01" />
+          </svg>
+        </div>
+        <div class="header-text">
+          <h1 class="header-title">MCQ AI</h1>
+          <span class="header-badge">VISION</span>
+        </div>
+      </div>
+      <button id="btn-settings" class="btn-icon" aria-label="Settings" title="Settings">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3" />
+          <path
+            d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
+        </svg>
+      </button>
+    </header>
+
+    <!-- ─── Main Content ──────────────────────────────────────────────── -->
+    <main class="main">
+
+      <!-- Capture Button -->
+      <button id="btn-capture" class="btn-capture">
+        <span class="btn-capture-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10" />
+            <circle cx="12" cy="12" r="3" />
+          </svg>
+        </span>
+        <span class="btn-capture-text">Capture &amp; Solve</span>
+      </button>
+
+      <!-- Empty State -->
+      <div id="state-empty" class="state-card state-empty">
+        <div class="empty-icon">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"
+            stroke-linecap="round" stroke-linejoin="round" opacity="0.3">
+            <path
+              d="M12 2a8 8 0 0 0-8 8c0 3.4 2.1 6.3 5 7.4V20a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-2.6c2.9-1.1 5-4 5-7.4a8 8 0 0 0-8-8z" />
+            <line x1="10" y1="22" x2="14" y2="22" />
+          </svg>
+        </div>
+        <p class="empty-text">Capture a question to get started</p>
+        <p class="empty-sub">Click the button above to screenshot your screen</p>
+      </div>
+
+      <!-- Loading State -->
+      <div id="state-loading" class="state-card state-loading hidden">
+        <div class="loader-ring">
+          <svg viewBox="0 0 50 50" class="spinner">
+            <circle cx="25" cy="25" r="20" fill="none" stroke-width="3" stroke="url(#grad)" stroke-linecap="round" />
+            <defs>
+              <linearGradient id="grad">
+                <stop offset="0%" stop-color="var(--accent)" />
+                <stop offset="100%" stop-color="transparent" />
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <div class="loading-label">Analyzing Screen...</div>
+        <div class="skeleton-group">
+          <div class="skeleton skeleton-lg"></div>
+          <div class="skeleton skeleton-md"></div>
+          <div class="skeleton skeleton-sm"></div>
+        </div>
+      </div>
+
+      <!-- Answer State -->
+      <div id="state-answer" class="state-card state-answer hidden">
+        <div class="answer-badge">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+          <span>CORRECT ANSWER</span>
+        </div>
+        <div id="answer-text" class="answer-text"></div>
+
+        <!-- Explanation Accordion -->
+        <div id="accordion" class="accordion">
+          <button id="btn-accordion" class="accordion-trigger">
+            <span>Reveal Explanation</span>
+            <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6" />
+            </svg>
+          </button>
+          <div class="accordion-content">
+            <div id="explanation-text" class="explanation-text"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Error State -->
+      <div id="state-error" class="state-card state-error hidden">
+        <div class="error-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="15" y1="9" x2="9" y2="15" />
+            <line x1="9" y1="9" x2="15" y2="15" />
+          </svg>
+        </div>
+        <div id="error-message" class="error-message">Something went wrong</div>
+        <button id="btn-retry" class="btn-retry">Try Again</button>
+      </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-provider">
+        <span class="provider-dot"></span>
+        <span id="provider-name" class="provider-label">No provider configured</span>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- ─── Settings Panel (Overlay) ────────────────────────────────────── -->
+  <div id="settings-overlay" class="settings-overlay hidden"></div>
+  <aside id="settings-panel" class="settings-panel">
+    <div class="settings-header">
+      <h2 class="settings-title">Settings</h2>
+      <button id="btn-close-settings" class="btn-icon" aria-label="Close settings">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18" />
+          <line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+      </button>
+    </div>
+
+    <div class="settings-body">
+      <!-- Provider Selector -->
+      <div class="field-group">
+        <label class="field-label">API PROVIDER</label>
+        <div class="provider-selector">
+          <button class="provider-btn active" data-provider="gemini">
+            <span class="provider-btn-name">Gemini</span>
+            <span class="provider-btn-sub">Free Tier</span>
+          </button>
+          <button class="provider-btn" data-provider="openrouter">
+            <span class="provider-btn-name">OpenRouter</span>
+            <span class="provider-btn-sub">Multi-Model</span>
+          </button>
+          <button class="provider-btn" data-provider="custom">
+            <span class="provider-btn-name">Custom</span>
+            <span class="provider-btn-sub">Endpoint</span>
+          </button>
+          <button class="provider-btn" data-provider="ollama">
+            <span class="provider-btn-name">Ollama</span>
+            <span class="provider-btn-sub">Local API</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Gemini Settings -->
+      <div id="settings-gemini" class="provider-settings">
+        <div class="field-group">
+          <label class="field-label" for="gemini-key">API KEY</label>
+          <input type="password" id="gemini-key" class="field-input" placeholder="AIzaSy..." autocomplete="off" />
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="gemini-model"
+            style="display: flex; justify-content: space-between; align-items: center;">
+            <span>MODEL</span>
+            <button id="btn-fetch-gemini-models" type="button" title="Fetch available models"
+              style="background: none; border: none; cursor: pointer; color: var(--text-muted); font-size: 12px; padding: 0;">🔄
+              Fetch Models</button>
+          </label>
+          <select id="gemini-model" class="field-select">
+          </select>
+        </div>
+      </div>
+
+      <!-- OpenRouter Settings -->
+      <div id="settings-openrouter" class="provider-settings hidden">
+        <div class="field-group">
+          <label class="field-label" for="openrouter-key">API KEY</label>
+          <input type="password" id="openrouter-key" class="field-input" placeholder="sk-or-..." autocomplete="off" />
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="openrouter-model">MODEL</label>
+          <input type="text" id="openrouter-model" class="field-input" placeholder="google/gemini-flash-1.5"
+            value="google/gemini-flash-1.5" />
+        </div>
+      </div>
+
+      <!-- Custom Endpoint Settings -->
+      <div id="settings-custom" class="provider-settings hidden">
+        <div class="field-group">
+          <label class="field-label" for="custom-url">BASE URL</label>
+          <input type="url" id="custom-url" class="field-input" placeholder="https://api.example.com/v1"
+            autocomplete="off" />
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="custom-key">API KEY</label>
+          <input type="password" id="custom-key" class="field-input" placeholder="Bearer token or API key"
+            autocomplete="off" />
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="custom-model">MODEL NAME</label>
+          <input type="text" id="custom-model" class="field-input" placeholder="gpt-4o-mini" />
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="custom-headers">CUSTOM HEADERS (JSON)</label>
+          <textarea id="custom-headers" class="field-textarea" rows="3"
+            placeholder='{"X-Custom-Header": "value"}'></textarea>
+        </div>
+      </div>
+
+      <!-- Ollama Settings -->
+      <div id="settings-ollama" class="provider-settings hidden">
+        <div class="field-group">
+          <label class="field-label" for="ollama-url">OLLAMA URL</label>
+          <input type="url" id="ollama-url" class="field-input" placeholder="http://localhost:11434"
+            value="http://localhost:11434" />
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="ollama-model">MODEL NAME</label>
+          <input type="text" id="ollama-model" class="field-input" placeholder="llama3.2-vision"
+            value="llama3.2-vision" />
+        </div>
+      </div>
+
+      <!-- Save Button -->
+      <button id="btn-save-settings" class="btn-save">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12" />
+        </svg>
+        Save Settings
+      </button>
+
+      <div id="save-toast" class="save-toast hidden">Settings saved</div>
+    </div>
+  </aside>
+
+  <script src="sidebar.js"></script>
+</body>
+
+</html>
